@@ -1,42 +1,52 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import Appbar from "Mui-components/Appbar";
+import Drawwer from "Mui-components/Drawwer";
+import { Box } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import getDesignTokens from "styles/MyTheme";
 
 const Root = () => {
+  const [drawerType, setDrawerType] = useState("permanent");
+  const [noneORblock, setnoneORblock] = useState("none");
+  const [mode, setMyMode] = useState(
+    localStorage.getItem("currentmode") === null
+      ? "light"
+      : localStorage.getItem("currentmode") === "light"
+      ? "light"
+      : "dark"
+  );
+  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+
   return (
-    <div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       {/* <header>
       <h1>الحمدلله</h1>
       </header> */}
-      <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
-      <Outlet/>
-    </div>
+
+      <Appbar setnoneORblock={setnoneORblock} setDrawerType={setDrawerType} />
+      <Drawwer
+        setMode={setMyMode}
+        myMode={mode}
+        noneORblock={noneORblock}
+        drawerType={drawerType}
+        setnoneORblock={setnoneORblock}
+        setDrawerType={setDrawerType}
+      />
+      <Box
+        sx={{
+          ml: { xs: "0", sx: "0", md: "240px" },
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Outlet />
+      </Box>
+    </ThemeProvider>
   );
-}
+};
 
 export default Root;
